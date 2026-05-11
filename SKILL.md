@@ -55,6 +55,7 @@ Requirements:
 - No external CDN
 - No external fonts
 - No external images unless explicitly provided
+- Convert Mermaid, Graphviz, or other diagram source blocks into browser-native inline SVG or equivalent HTML/CSS diagrams when possible
 - Openable directly in a browser
 - Responsive layout
 - Clear visual hierarchy
@@ -117,6 +118,15 @@ Rules:
 - Keep enough whitespace.
 - Avoid decorative complexity unless the task is design-focused.
 - Make the page readable on mobile.
+
+## Diagram Conversion Guidelines
+When source material contains Mermaid, Graphviz, ASCII flows, or diagram-like code blocks:
+- Do not leave them as raw code if they are important to understanding.
+- Prefer converting them to inline SVG, HTML/CSS flow diagrams, or another browser-native representation.
+- Do not rely on Mermaid CDN, external renderers, remote fonts, or network access.
+- Preserve the original diagram source in a collapsible appendix or details block.
+- If conversion is unsafe or unsupported, show a clear fallback: a readable code block plus a note explaining that the diagram could not be converted.
+- For flowcharts, preserve direction, node labels, edges, branching, feedback loops, and semantic grouping.
 
 ## Interaction Guidelines
 Only add interaction when it helps the task.
@@ -243,6 +253,7 @@ Before finishing, verify:
 - Is this more useful than Markdown?
 - Can the user understand the main point in 30 seconds?
 - Can the user inspect details if needed?
+- Are source diagrams rendered as browser-native visuals rather than raw Mermaid when possible?
 - Are risks and assumptions visible?
 - Are comparisons easy to scan?
 - Are interactions useful rather than decorative?
