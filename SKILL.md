@@ -33,6 +33,39 @@ It should not merely be a prettier document. It should make the underlying decis
 
 Markdown is for lightweight records. HTML artifacts are for human decisions, reviews, comparisons, and collaboration interfaces.
 
+## Source Independence
+Do not require Markdown as the canonical source for an HTML artifact.
+
+HTML may be the primary artifact and the source of truth. When an existing `.html` artifact is being edited, reviewed, enriched, served, or published:
+- Read and preserve the HTML directly.
+- Do not regenerate it from a same-named `.md` file unless the user explicitly asks for Markdown-driven generation.
+- Treat Markdown as optional source material, history, appendix content, or export format.
+- If a build system supports both Markdown and HTML, prefer an explicit marker or metadata field that declares manual HTML ownership rather than relying on filename conventions.
+- Do not overwrite a user-maintained HTML artifact with Markdown-derived output.
+- Keep export-to-Markdown useful, but do not make Markdown a dependency for editing or serving the artifact.
+
+## HTML-First Source Conversion
+When source material is Markdown, plain text, Mermaid, Graphviz, logs, JSON, or mixed notes, convert the useful content into browser-native HTML as the main reading surface.
+
+Rules:
+- Do not leave the source as a raw Markdown appendix unless the user explicitly asks for raw source preservation.
+- Render headings, lists, tables, quotes, code blocks, diagrams, metadata, and links as HTML sections that are readable directly in the browser.
+- If source text matters for auditability, place it in a clearly labeled evidence or raw-data section only when that helps review; do not make it the primary reading path.
+- For Markdown-derived pages, use language such as "Full Document Content" or "Rendered Content" rather than "Original Markdown Source Appendix".
+- Export controls should prefer HTML, JSON, Prompt, Diff, or selected structured data. Offer Markdown export only when the user asks for Markdown compatibility.
+
+## Bilingual Artifacts
+Maintain both Chinese and English versions when creating or maintaining a durable HTML artifact or documentation site.
+
+Rules:
+- For a standalone artifact, include a clear language switch or two top-level language views (`中文` and `English`) in the same self-contained file unless separate files are requested.
+- For a multi-page site, maintain parallel `zh` and `en` routes. A common pattern is Chinese at the canonical path and English under `en/`, with every page linking to its counterpart.
+- Keep language metadata explicit: set `<html lang="zh-CN">` for Chinese pages and `<html lang="en">` for English pages.
+- Keep the same information architecture, headings, anchors, export controls, and navigation in both languages.
+- If full human-quality translation is not yet available, still create the English page and mark untranslated body sections clearly; do not silently pretend mixed-language content is fully localized.
+- For generated indexes or manifests, include both language paths, for example `html_zh` and `html_en`.
+- Preserve historical ordering across languages. If an HTML artifact corresponds to a Markdown/source document, inherit that source's creation history; standalone HTML artifacts can use artifact file time.
+
 ## When To Choose HTML
 Use HTML when any of these are true:
 - The content is longer than about 100 lines.
@@ -90,7 +123,7 @@ Every HTML artifact should generally include:
    - collapsible sections
    - comparison controls
 6. Export Section
-   - Copy as Markdown
+   - Copy as HTML
    - Copy as JSON
    - Copy as Prompt
    - Copy diff
@@ -100,6 +133,17 @@ Every HTML artifact should generally include:
    - raw data
    - unresolved questions
    - next actions
+
+## Report Layout Rules
+When generating analytical reports, experiment reports, evaluation summaries, benchmark comparisons, or documentation index cards:
+
+- State the exact evidence scope used for every aggregate conclusion. For experiment reports, list the paper IDs, titles, sample counts, valid/invalid rows, and any checkpointed or excluded runs before presenting rankings.
+- Include a per-item comparison view whenever aggregates are shown. For PaperBench-style reports, this means per-paper rows with the compared variants or versions, P/R/F1 or equivalent metrics, and a short interpretation for each paper.
+- Use interactive filters for comparison tables that are longer than a few rows or likely to be inspected by paper, variant, module, model, run, severity, or tag.
+- Keep aggregate and per-item conclusions separate. Do not mix partial, checkpointed, smoke, or failed runs into headline rankings unless the report clearly labels the scope and risk.
+- Write summary cards as decision-oriented abstracts, not generic artifact descriptions. A card should say what was measured, which data it used, the main result, and the recommended interpretation.
+- Do not display tags that apply to every page in the same collection. Hide generic tags such as `Standalone HTML`, `artifact`, or broad category labels when they add no filtering value; show only differentiating tags such as version, protocol, model, benchmark, status, or risk.
+- For bilingual documentation sites, keep the same layout, evidence scope, tables, filters, and card summaries across languages. Do not add a structural improvement to only one language route.
 
 ## Visual Design Guidelines
 Use a clean, information-dense but readable style.
@@ -141,7 +185,7 @@ Useful interactions:
 - collapsible sections for long explanations
 - live preview for prompt, template, or config editing
 
-When creating an editor, always include an export button. The export should be directly usable by the user, usually as JSON, Markdown, prompt text, patch instructions, or a config diff.
+When creating an editor, always include an export button. The export should be directly usable by the user, usually as HTML, JSON, prompt text, patch instructions, or a config diff. Add Markdown export only when the user needs Markdown compatibility.
 
 ## Workflow
 Use this five-step loop for complex work:
@@ -246,7 +290,7 @@ Always:
 ## Prompt Pattern
 When invoking this skill, follow this pattern:
 
-> Create a single-file HTML artifact for [task]. It should help me [decision/review/understand/edit/share]. Include [visualizations/interactions]. Add export buttons for [JSON/Markdown/Prompt/Diff]. Make it self-contained and readable in a browser.
+> Create a single-file bilingual HTML artifact for [task]. It should help me [decision/review/understand/edit/share]. Include [visualizations/interactions]. Render any source material as browser-native HTML, not as a raw Markdown appendix. Add export buttons for [HTML/JSON/Prompt/Diff]. Make it self-contained, readable in a browser, and available in both Chinese and English.
 
 ## Quality Checklist
 Before finishing, verify:
@@ -260,4 +304,6 @@ Before finishing, verify:
 - Is there a way to export the result back to the agent workflow?
 - Is the file self-contained?
 - Does it work without internet?
+- Is there both a Chinese and English reading path for durable artifacts?
+- Is source material rendered as useful HTML rather than left as raw Markdown?
 
