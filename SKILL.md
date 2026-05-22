@@ -145,6 +145,29 @@ When generating analytical reports, experiment reports, evaluation summaries, be
 - Do not display tags that apply to every page in the same collection. Hide generic tags such as `Standalone HTML`, `artifact`, or broad category labels when they add no filtering value; show only differentiating tags such as version, protocol, model, benchmark, status, or risk.
 - For bilingual documentation sites, keep the same layout, evidence scope, tables, filters, and card summaries across languages. Do not add a structural improvement to only one language route.
 
+## Math And Formula Rendering
+When an artifact includes equations, metrics, scoring rules, or symbolic definitions, render them as math, not as plain code-like text.
+
+Rules:
+- Prefer LaTeX delimiters for author-written formulas: inline `\(...\)` and display `\[...\]` or `$$...$$`.
+- For multi-line metric definitions, use an aligned display block so equal signs and terms scan vertically.
+- If a source artifact already has plain formula blocks such as `<div class="formula">A = ...</div>`, preserve the source text but upgrade the browser view with MathJax or an equivalent local renderer.
+- Keep formula blocks horizontally scrollable on small screens; do not let long equations break the page layout.
+- Do not rely on external CDNs for required offline artifacts. If CDN MathJax is acceptable for a served documentation site, make that dependency explicit and keep a readable fallback.
+- Avoid wrapping formulas in `<code>` or `<pre>` unless the user is reviewing source syntax rather than reading the math.
+
+## Durable Documentation Sites
+When maintaining a multi-page HTML documentation site, treat serving, translation, and generated caches as part of the artifact system.
+
+Rules:
+- Use a single docs server entry point that indexes all HTML artifacts and keeps stable `zh` and `en` routes.
+- Add a language switch to manual and standalone HTML artifacts without replacing their original body.
+- When injecting shared UI, math support, or translation controls into existing HTML, only mutate complete HTML documents with `html/head/body`; never let a fragment or corrupt cache overwrite a full artifact.
+- Validate translation caches before using them. If a cached HTML translation is malformed, fall back to the complete source page and regenerate the cache later.
+- For on-demand translation, return the existing static page immediately and do translation in the background. Show a status banner and refresh only after the updated page is available.
+- For backfill translation, run slow polling separately from request-time behavior so language-switch clicks do not block page load.
+- For public preview tunnels such as ngrok, use a supervisor or hook that keeps both the docs server and tunnel process alive and records the current public URL.
+
 ## Visual Design Guidelines
 Use a clean, information-dense but readable style.
 
@@ -306,4 +329,7 @@ Before finishing, verify:
 - Does it work without internet?
 - Is there both a Chinese and English reading path for durable artifacts?
 - Is source material rendered as useful HTML rather than left as raw Markdown?
+- Are formulas rendered as math and still readable on narrow screens?
+- If this is a docs site, are complete HTML documents protected from malformed translation caches or partial injection?
+- If remote preview was requested, is the server/tunnel supervised rather than manually started once?
 

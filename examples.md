@@ -92,6 +92,34 @@
 - 每页顶部提供 中文 / English 切换。
 - index 和 manifest 都要记录双语入口，例如 html_zh / html_en。
 - 同名 HTML artifact 如对应 Markdown source，应继承 source 的历史日期；无 source 的 standalone HTML artifact 可使用文件时间。
+- 如果页面包含数学公式或指标定义，请用 MathJax / LaTeX display math 渲染，不要只显示成代码块。
+- 注入语言切换、数学支持或翻译控件时，必须保留完整 HTML 正文；坏缓存或 HTML 片段不能覆盖完整页面。
+- 翻译要异步：先显示现有静态页面，再后台补齐翻译，完成后动态刷新。
 - 导出按钮优先提供 HTML / JSON / Prompt。
+```
+
+## Durable HTML Docs Server
+
+```text
+请把当前 HTML artifact 文档站维护成可远程预览的 durable docs site。
+要求：
+- 使用统一 server 入口索引所有 HTML 页面。
+- 保持中文 canonical path 和 English `en/` 路由。
+- 为 manual / standalone HTML 注入语言切换和公式支持，但不能覆盖原始 body。
+- 对 translation cache 做完整性校验，只接受包含 html/head/body 的完整 HTML。
+- 点击语言切换时不要阻塞页面加载：先返回已有静态页，后台翻译，完成后刷新。
+- 配置 watchdog / supervisor，让 docs server 和 ngrok tunnel 断掉后自动重启，并把 public URL 写到日志。
+```
+
+## Formula-Heavy Report
+
+```text
+请生成一个包含指标公式的双语 HTML artifact。
+要求：
+- 用卡片解释每个指标的用途、输入、输出和优化方向。
+- 公式使用 LaTeX display math 或 aligned blocks，不要只放在 pre/code 中。
+- 长公式在窄屏下可横向滚动。
+- 如果保留原始 formula text，请同时提供浏览器可读的数学渲染。
+- 提供中文 / English 两个阅读路径。
 ```
 

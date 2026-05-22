@@ -31,6 +31,26 @@ HTML artifact 可以直接作为一等源文件维护。不要默认要求每个
 - 索引或 manifest 应显式记录双语路径，例如 `html_zh` 与 `html_en`。
 - 如果英文正文尚未完成，也要创建英文入口并明确标注未翻译部分，不能假装已经完整本地化。
 
+### Math and formulas
+
+涉及指标、评分规则、概率、集合或算法定义时，公式应该作为数学内容呈现，而不是普通代码块：
+
+- 优先使用 LaTeX delimiter：inline `\(...\)`，display `\[...\]` 或 `$$...$$`。
+- 多行指标定义使用 aligned display，便于对齐等号和逐行阅读。
+- 已存在的 `<div class="formula">...</div>` 纯文本公式块可以保留 source text，同时在浏览器中升级为 MathJax 或等价渲染。
+- 公式区域需要横向滚动 fallback，避免移动端或窄屏把页面撑坏。
+
+### Durable docs sites
+
+当 HTML artifact 发展成多页面文档站时，服务、翻译和缓存也属于 artifact 质量的一部分：
+
+- 用统一入口索引所有 HTML artifact，并维护 `zh` / `en` 平行路由。
+- 语言切换、公式支持、翻译状态条等共享 UI 可以注入 manual/standalone HTML，但不能替换原始正文。
+- 只信任完整 HTML 文档缓存：至少应包含 `html/head/body`。坏缓存或片段不能覆盖完整 artifact。
+- 请求时翻译应异步：先返回已有静态页面，再后台翻译并在完成后刷新。
+- 历史翻译 backfill 应由慢轮询处理，不阻塞用户点击语言切换。
+- 需要远程预览时，用 supervisor/hook 同时守护 docs server 和 tunnel（例如 ngrok），并记录当前 public URL。
+
 ## Cursor Usage
 
 To use this as a project skill, place this repository at:
