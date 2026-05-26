@@ -1,14 +1,16 @@
 # HTML Artifact Skill
 
-HTML Artifact 工作流让 agent 输出从“文本计划”升级为“可读、可交互、可审阅的工作界面”。
+[中文 README](README.zh-CN.md)
 
-核心思想不是用 HTML 替代 Markdown，而是：
+The HTML Artifact workflow turns agent output from a text-only plan into a readable, interactive, reviewable work surface.
 
-> 当输出的目的不只是记录，而是帮助人理解、比较、决策、审阅、调整时，优先让 agent 生成 HTML Artifact。
+The core idea is not to replace Markdown with HTML. It is:
 
-Markdown 适合短文本、轻量笔记、README、简单说明。HTML 适合复杂信息、可视化、交互、评审、分享和决策。
+> When the output is meant to help a human understand, compare, decide, review, or adjust something, prefer an HTML Artifact.
 
-HTML artifact 可以直接作为一等源文件维护。不要默认要求每个 HTML 都由 Markdown 生成；当用户编辑、发布或审阅已有 HTML artifact 时，应优先保留 HTML 本身，只把 Markdown 当作可选历史、附录或导出格式。
+Markdown is still right for short text, lightweight notes, README drafts, and simple explanations. HTML is better for complex information, visualization, interaction, review, sharing, and decision support.
+
+An HTML artifact can be maintained as a first-class source file. Do not assume every HTML page must be generated from Markdown. When editing, publishing, or reviewing an existing HTML artifact, preserve the HTML itself and treat Markdown as optional history, appendix material, or an export format.
 
 Presentation style inspired by [trq212's X post](https://x.com/trq212/status/2052809885763747935). The previews below are checked into this repo so the README remains useful even when remote embeds fail.
 
@@ -42,42 +44,42 @@ Metric definitions and equations are rendered as readable math blocks with narro
 
 ### HTML-first content
 
-当输入来自 Markdown、日志、JSON、表格或混合笔记时，默认把有用内容转换成浏览器原生 HTML 正文：
+When input comes from Markdown, logs, JSON, tables, or mixed notes, convert the useful content into browser-native HTML as the main reading surface:
 
-- 标题、列表、表格、引用、代码块、图和链接都应渲染为 HTML。
-- 不要把完整内容藏在 `Original Markdown Source Appendix` 一类的 raw Markdown 附录里。
-- 如果需要审计原始材料，可以加入 evidence/raw-data 区块，但它不应成为主要阅读路径。
-- 导出优先提供 HTML、JSON、Prompt、Diff 或结构化数据；Markdown 导出只作为兼容选项。
+- Render headings, lists, tables, quotes, code blocks, diagrams, and links as HTML.
+- Do not hide the full content inside an `Original Markdown Source Appendix`.
+- If source auditability matters, add evidence or raw-data sections, but do not make them the primary reading path.
+- Prefer export controls for HTML, JSON, Prompt, Diff, or structured data. Offer Markdown export only as a compatibility option.
 
 ### Bilingual output
 
-持久化 artifact 和文档站点默认维护中英文两个阅读路径：
+Durable artifacts and documentation sites should maintain both English and Chinese reading paths:
 
-- 单文件 artifact：在同一个 HTML 中提供 `中文` / `English` 切换或双语视图。
-- 多页面站点：维护平行路由，例如中文在 canonical path，英文在 `en/` 下。
-- 页面应设置正确语言属性：`<html lang="zh-CN">` 和 `<html lang="en">`。
-- 索引或 manifest 应显式记录双语路径，例如 `html_zh` 与 `html_en`。
-- 如果英文正文尚未完成，也要创建英文入口并明确标注未翻译部分，不能假装已经完整本地化。
+- Single-file artifact: include a `中文` / `English` switch or two top-level language views in the same HTML file.
+- Multi-page site: maintain parallel routes, for example English at the public entry and Chinese in a linked `zh-CN` route or file.
+- Set language attributes correctly: `<html lang="en">` and `<html lang="zh-CN">`.
+- Indexes or manifests should record bilingual paths explicitly, such as `html_en` and `html_zh`.
+- If a translation is incomplete, still create the other-language entry and mark unfinished sections clearly.
 
 ### Math and formulas
 
-涉及指标、评分规则、概率、集合或算法定义时，公式应该作为数学内容呈现，而不是普通代码块：
+When a page includes metrics, scoring rules, probability, sets, or algorithm definitions, render formulas as math, not as plain code blocks:
 
-- 优先使用 LaTeX delimiter：inline `\(...\)`，display `\[...\]` 或 `$$...$$`。
-- 多行指标定义使用 aligned display，便于对齐等号和逐行阅读。
-- 已存在的 `<div class="formula">...</div>` 纯文本公式块可以保留 source text，同时在浏览器中升级为 MathJax 或等价渲染。
-- 公式区域需要横向滚动 fallback，避免移动端或窄屏把页面撑坏。
+- Prefer LaTeX delimiters: inline `\(...\)`, display `\[...\]` or `$$...$$`.
+- Use aligned display blocks for multi-line metric definitions so equal signs scan vertically.
+- Existing plain formula blocks such as `<div class="formula">...</div>` may preserve source text while upgrading the browser view with MathJax or equivalent rendering.
+- Formula regions need horizontal-scroll fallbacks so narrow screens do not break the page.
 
 ### Durable docs sites
 
-当 HTML artifact 发展成多页面文档站时，服务、翻译和缓存也属于 artifact 质量的一部分：
+When HTML artifacts become a multi-page documentation site, serving, translation, and cache hygiene are part of artifact quality:
 
-- 用统一入口索引所有 HTML artifact，并维护 `zh` / `en` 平行路由。
-- 语言切换、公式支持、翻译状态条等共享 UI 可以注入 manual/standalone HTML，但不能替换原始正文。
-- 只信任完整 HTML 文档缓存：至少应包含 `html/head/body`。坏缓存或片段不能覆盖完整 artifact。
-- 请求时翻译应异步：先返回已有静态页面，再后台翻译并在完成后刷新。
-- 历史翻译 backfill 应由慢轮询处理，不阻塞用户点击语言切换。
-- 需要远程预览时，用 supervisor/hook 同时守护 docs server 和 tunnel（例如 ngrok），并记录当前 public URL。
+- Use one server entry point to index all HTML artifacts and keep stable English and Chinese routes.
+- Shared UI such as language switches, math support, and translation status bars may be injected into manual or standalone HTML, but must not replace the original body.
+- Trust only complete HTML document caches. A valid cache should at least include `html/head/body`; corrupt fragments must never overwrite a complete artifact.
+- Request-time translation should be async: return the current static page first, translate in the background, then refresh when ready.
+- Historical translation backfill should run through slow polling so language switches do not block page load.
+- For remote previews, use a supervisor or hook to keep both the docs server and tunnel (for example ngrok) alive and record the current public URL.
 
 ## Cursor Usage
 
@@ -127,7 +129,9 @@ A strong HTML artifact usually contains:
 ## Files
 
 - `SKILL.md`: Cursor skill definition.
-- `examples.md`: Prompt templates for common HTML artifact tasks.
+- `SKILL.zh-CN.md`: Chinese skill reference.
+- `examples.md`: English prompt templates for common HTML artifact tasks.
+- `examples.zh-CN.md`: Chinese prompt templates for common HTML artifact tasks.
 - `examples/gallery/`: self-contained demo HTML files linked from this README.
 - `assets/readme/`: rendered preview assets used by the README gallery.
 - `scripts/render-readme-assets.py`: dependency-free generator for the README preview assets.
