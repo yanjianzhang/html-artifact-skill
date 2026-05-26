@@ -65,6 +65,8 @@ Rules:
 - If full human-quality translation is not yet available, still create the English page and mark untranslated body sections clearly; do not silently pretend mixed-language content is fully localized.
 - For generated indexes or manifests, include both language paths, for example `html_zh` and `html_en`.
 - Preserve historical ordering across languages. If an HTML artifact corresponds to a Markdown/source document, inherit that source's creation history; standalone HTML artifacts can use artifact file time.
+- Include CJK-aware fonts in the body font stack of any page that can render Chinese, for example `"PingFang SC", "Microsoft YaHei"` after the Latin stack. Do this in both the Chinese and English HTML so a switched language never loses CJK fallback.
+- When two parallel manual pages exist (one per language), write each one as a first-class artifact with the same layout primitives, the same metric cards, the same tables, and the same SVG diagrams. Do not let one language be a thinner summary of the other.
 
 ## When To Choose HTML
 Use HTML when any of these are true:
@@ -168,6 +170,16 @@ Rules:
 - For backfill translation, run slow polling separately from request-time behavior so language-switch clicks do not block page load.
 - For public preview tunnels such as ngrok, use a supervisor or hook that keeps both the docs server and tunnel process alive and records the current public URL.
 
+### Manual HTML Ownership Marker
+Declare manual ownership with an explicit marker comment near the top of the document, for example `<!-- paperbench-html-source: manual -->`. The build system must:
+- Detect the marker by reading the file head, not by filename or directory.
+- Skip overwriting marked files when regenerating from Markdown or templates.
+- Apply the same protection rule across **all** language routes, not just the default language. A manually maintained English page under `en/` must be preserved with the same logic that protects the default-language manual page.
+- Continue to inject shared site furniture (language switch nav, math support, etc.) into manual pages, since that is augmentation, not body replacement.
+- Treat the absence of the marker as permission to regenerate; do not silently keep stale auto-generated content alive.
+
+When the source-of-truth document moves (e.g. when a manual HTML supersedes a previously auto-generated page), explicitly migrate the marker and rebuild once to verify both languages remain intact.
+
 ## Visual Design Guidelines
 Use a clean, information-dense but readable style.
 
@@ -181,10 +193,36 @@ Rules:
   - orange for warnings
   - blue for informational notes
   - green for success or recommendation
+  - purple for the module or focal stage under review in a module-focused report
   - gray for neutral metadata
 - Keep enough whitespace.
 - Avoid decorative complexity unless the task is design-focused.
 - Make the page readable on mobile.
+
+### Headline Metric Cards
+For experiment reports, evaluation summaries, and module status pages, place a small grid of 3-5 "metric cards" near the top so the headline numbers are readable in under 10 seconds. A useful pattern:
+- Large number in a strong color (`color: var(--blue)` etc.), font-size around `2rem`, font-weight 800.
+- One-line label below in muted color, including the denominator or comparison baseline (`257 / 305`, `vs V7 baseline 25.6%`).
+- Use semantic color per card: green for the achieved target, blue for the headline result, orange for the delta vs baseline, purple for volume or population size.
+- Place these next to the executive summary so a reviewer can match each takeaway to a number.
+
+### Table Conventions For Numeric Reports
+- Right-align numeric columns with `text-align: right` and `font-variant-numeric: tabular-nums` so digits line up across rows.
+- Include the denominator inside the cell when the number is a ratio (`52 / 62 = 83.9%`), not in a separate column.
+- Bold the headline cell in each row (the metric the table exists to compare) so the eye lands on it.
+- For tables that have both per-item rows and an aggregate row, give the aggregate row a distinct background and bold weight (for example `tr.total td { background: #f1f5f9; font-weight: 700; }`).
+- Use `rowspan` to group per-item variants under the item label rather than repeating the label.
+- Keep at most one totals row per table; do not interleave totals between groups unless the data demands it.
+
+### Callout Boxes
+Provide a small set of semantic callout styles (`.callout`, `.callout.green`, `.callout.orange`, `.callout.red`, `.callout.purple`) with a left border in the same hue. Use them to lift one-line conclusions out of the body text:
+- green for confirmed positive findings
+- blue for neutral observations
+- orange for caveats and trade-offs
+- red for blockers or invalidating issues
+- purple for the focal module or focal change
+
+Callouts must be short. If a callout grows past three lines, demote it into a regular paragraph or split it into a bulleted list.
 
 ## Diagram Conversion Guidelines
 When source material contains Mermaid, Graphviz, ASCII flows, or diagram-like code blocks:
@@ -194,6 +232,18 @@ When source material contains Mermaid, Graphviz, ASCII flows, or diagram-like co
 - Preserve the original diagram source in a collapsible appendix or details block.
 - If conversion is unsafe or unsupported, show a clear fallback: a readable code block plus a note explaining that the diagram could not be converted.
 - For flowcharts, preserve direction, node labels, edges, branching, feedback loops, and semantic grouping.
+
+### Inline SVG Pipeline Diagrams
+For pipeline, architecture, or data-flow diagrams that frame a report:
+- Use inline `<svg viewBox="...">` with `width: 100%; height: auto` so the diagram scales with the panel.
+- Define a single arrow `<marker>` in `<defs>` and reuse it on every edge, so all edges have identical arrowheads.
+- Color-code nodes by role and document the roles in a legend below the SVG (input, focal module, planner/orchestrator, downstream stage, final output).
+- Highlight the focal module with a thicker stroke and a stronger fill (a light gradient is fine) so the eye lands on the page's subject.
+- Label every node with both its name (large, bold) and its identifier or path (small, muted): for example a module name plus its source file, model, or key configuration.
+- Place an SVG `<title>` and an outer `role="img" aria-label="..."` so screen readers and search indexes understand the diagram.
+- Annotate the dominant output of the focal node next to its outgoing edge (data type, schema, id space), not in a paragraph that the reader has to find later.
+- Keep the diagram below ~600 px tall on desktop so it remains readable next to body text, and ensure it remains legible on narrow screens (no horizontal scroll required).
+- Repeat the same SVG content in both language versions of a bilingual artifact; translate the in-diagram text but keep the geometry identical so reviewers comparing the two versions can map nodes one-to-one.
 
 ## Interaction Guidelines
 Only add interaction when it helps the task.
@@ -292,6 +342,20 @@ When creating a report, create an HTML artifact that includes:
 
 Optimize for the target reader: self, engineer, manager, executive, investor, or customer.
 
+## Use Case: Module / Pipeline Documentation
+When the artifact explains one module inside a larger pipeline (for example an extractor, planner, reviewer, scorer, gate, or orchestrator), structure the page so the reader can answer four questions without scrolling back:
+
+1. Where does this module sit in the pipeline? Show a pipeline SVG that highlights the focal module and dims the rest. Place this near the top of the page.
+2. What does it consume and emit? Add an inputs / outputs / model card with a `<dl class="kv">` block that lists each input field (name, type, source, size or cap), each output field (name, type, structure), and the model or external service the module calls (model name, version, concurrency parameters, timeout). Name the source file and key constants verbatim, for example `paperbench/rubric/v8_modules.py · MAX_CHUNK_CHARS = 18000`.
+3. How does it work internally? If the module has multiple recall layers, retry stages, sub-prompts, or fallbacks, give each one its own labelled card with a one-line description and the constants or prompt names that govern it.
+4. Does it actually work? Place per-item validation tables (one row per paper, document, ticket, or sample) above the aggregate row, and include both extractor-level and end-to-end measurements when both exist. Add a callout that states the headline conclusion in one sentence.
+
+Additional rules:
+- Distinguish "what this module can reach" from "what survives downstream" with separate tables and clearly different metric labels. Do not conflate planner-only or smoke-only numbers with final pipeline numbers.
+- For every measured number, link or cite the run artifact path (`tmp/...` or similar) in a muted footer so a reader can audit.
+- For every cited code path, prefer a code-style inline reference rather than a free-form sentence: `paperbench/rubric/v8_modules.py · EvidenceExtractor.extract` is more useful than "the extract function in v8_modules".
+- When comparing variants of the same module (with vs without a layer, monolithic vs parallel, etc.), present them as adjacent rows in one table so the delta is obvious, then summarize the delta in a callout below the table.
+
 ## Use Case: Custom Editor
 When the user needs to rank, bucket, label, edit, review, or tune something, create an HTML tool, not a static document.
 
@@ -310,6 +374,20 @@ Always:
 - allow editing
 - provide export / copy functionality
 
+## Anti-Patterns
+Avoid these failure modes; each one has shown up in real reports and degrades trust.
+
+- **Boilerplate hero from a category template.** Do not inherit a generic category description (for example "explains repository structure, doc strategy, and review records") into the hero of a topic-specific artifact. The hero must describe *this* artifact's content, scope, and measurement target. Replace any inherited "purpose" string from an auto-generated category before publishing.
+- **Stale category metadata after rewrites.** When an artifact is rewritten with new scope (single paper → core3, smoke → planner-only), update the badges, tags, related-docs list, and JSON export at the same time. A mismatch between the body and the metadata is treated as evidence the page is out of date.
+- **Auto-generated and manual fighting over the same file.** Never let a Markdown-driven build overwrite a manually maintained HTML page. Use the ownership marker, apply it to all language routes, and verify by rebuilding twice in a row that the manual page is byte-stable between rebuilds.
+- **Mixing planner-only, smoke, and end-to-end numbers in one row.** Each metric must declare its scope (extractor-level, planner-only, full-pipeline, smoke vs full). Putting a planner-only `84.3%` and a final-rubric percent in the same column without labels misleads reviewers.
+- **Decorative source-code dumps.** Do not embed long raw Markdown or unprocessed source as the main reading surface. Render the useful parts as cards, tables, callouts, and diagrams; keep the raw source as an optional appendix only if audit is required.
+- **One-language improvements.** If a structural fix or new diagram is added to one language route, port it to the other route in the same change. A bilingual artifact where the languages have diverged in layout silently signals the project is unmaintained.
+- **Aggregate-only conclusions.** Do not present aggregate metrics without per-item rows when the aggregate could be dominated by one item. For three-paper benchmarks, always show the three per-paper rows above the total.
+- **Forgotten artifact paths.** When a number comes from a run, link or list the artifact path inline. Numbers without an artifact path are unauditable.
+- **Diagram drift.** When the pipeline changes (a module is added, renamed, or repositioned), update every diagram in the artifact tree, not just the one in the most recently edited page. A bilingual artifact must have identical diagram geometry across languages.
+- **Sticky-nav fight with the build system.** If the build system injects a sticky language switch at the top of `<body>`, do not also inject a competing fixed-position nav in the page body; let the build-system nav own that slot and provide an inline language switch in the topbar at most.
+
 ## Prompt Pattern
 When invoking this skill, follow this pattern:
 
@@ -318,18 +396,25 @@ When invoking this skill, follow this pattern:
 ## Quality Checklist
 Before finishing, verify:
 - Is this more useful than Markdown?
-- Can the user understand the main point in 30 seconds?
-- Can the user inspect details if needed?
+- Can the user understand the main point in 30 seconds (hero + metric cards + executive summary)?
+- Can the user inspect details if needed (per-item tables, code paths, artifact paths)?
+- Does the hero describe *this* artifact, not a generic category boilerplate?
 - Are source diagrams rendered as browser-native visuals rather than raw Mermaid when possible?
+- For module/pipeline pages, is there a labelled pipeline SVG with the focal module highlighted and a legend?
+- For module/pipeline pages, are inputs, outputs, and the model/service named with their source file and key constants?
+- Are per-item rows shown above any aggregate row, and is the aggregate visually distinct?
+- Are numeric columns right-aligned with tabular figures, and do ratios include their denominator inline?
+- Is every measurement number traceable to an artifact path or run id in the page itself?
 - Are risks and assumptions visible?
 - Are comparisons easy to scan?
 - Are interactions useful rather than decorative?
-- Is there a way to export the result back to the agent workflow?
-- Is the file self-contained?
-- Does it work without internet?
-- Is there both a Chinese and English reading path for durable artifacts?
+- Is there a way to export the result back to the agent workflow (JSON, Prompt, Markdown summary)?
+- Is the file self-contained, working without internet, and openable directly in a browser?
+- Is there both a Chinese and English reading path for durable artifacts, with the same layout, the same metric cards, the same tables, and the same SVG geometry?
+- Is the body font stack CJK-safe in both language pages?
 - Is source material rendered as useful HTML rather than left as raw Markdown?
 - Are formulas rendered as math and still readable on narrow screens?
 - If this is a docs site, are complete HTML documents protected from malformed translation caches or partial injection?
+- If the page is manually owned, does it carry the manual ownership marker in **every** language route it claims to own, and does a fresh rebuild leave both files byte-stable?
 - If remote preview was requested, is the server/tunnel supervised rather than manually started once?
 
