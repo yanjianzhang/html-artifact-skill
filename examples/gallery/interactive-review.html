@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTML Artifact Demo - Interactive Review</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --panel: #fff;
+      --ink: #172033;
+      --muted: #667085;
+      --line: #d9e0ea;
+      --blue: #2457c5;
+      --red: #b42318;
+      --orange: #b45309;
+      --green: #15803d;
+      --soft-blue: #eef4ff;
+      --soft-red: #fef3f2;
+      --soft-orange: #fff7ed;
+      --soft-green: #ecfdf3;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top right, #eaf1ff 0, transparent 34rem), var(--bg);
+      color: var(--ink);
+      font: 16px/1.58 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .shell { max-width: 1160px; margin: 0 auto; padding: 28px 20px 64px; }
+    .hero, .panel { background: rgba(255,255,255,.94); border: 1px solid var(--line); border-radius: 22px; box-shadow: 0 18px 45px rgba(16,24,40,.08); }
+    .hero { padding: 30px; margin-bottom: 18px; }
+    .hero h1 { margin: 0 0 8px; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.05; }
+    .hero p { margin: 8px 0; color: var(--muted); max-width: 840px; }
+    .panel { padding: 20px; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 14px; }
+    input, select, button { font: inherit; }
+    input, select { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: #fff; }
+    input { min-width: min(100%, 320px); }
+    button { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: #fff; cursor: pointer; font-weight: 750; }
+    table { width: 100%; border-collapse: collapse; font-size: .94rem; }
+    th, td { border: 1px solid var(--line); padding: 10px; text-align: left; vertical-align: top; }
+    th { background: #f8fafc; }
+    tr[data-hidden="true"] { display: none; }
+    .badge { display: inline-flex; border-radius: 999px; padding: 4px 9px; font-size: 12px; font-weight: 800; background: #eef2f6; color: #344054; }
+    .blocker { background: var(--soft-red); color: var(--red); }
+    .major { background: var(--soft-orange); color: var(--orange); }
+    .minor { background: var(--soft-blue); color: var(--blue); }
+    .done { background: var(--soft-green); color: var(--green); }
+    .muted { color: var(--muted); }
+    .count { margin-left: auto; color: var(--muted); font-weight: 750; }
+    pre { overflow: auto; background: #101828; color: #f9fafb; border-radius: 14px; padding: 14px; }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <h1>Interactive Review Demo</h1>
+      <p>Use search, severity filters, and export controls to inspect a review instead of reading a long static response.</p>
+    </section>
+    <section class="panel">
+      <div class="toolbar">
+        <input id="q" placeholder="Search files, findings, or owners..." oninput="filterRows()">
+        <select id="severity" onchange="filterRows()">
+          <option value="">All severities</option>
+          <option>Blocker</option>
+          <option>Major</option>
+          <option>Minor</option>
+        </select>
+        <button onclick="exportVisible()">Copy visible findings</button>
+        <span class="count" id="count"></span>
+      </div>
+      <table>
+        <thead><tr><th>Severity</th><th>Finding</th><th>File</th><th>Suggested action</th></tr></thead>
+        <tbody id="rows">
+          <tr data-severity="Blocker" data-search="auth session expiry token middleware">
+            <td><span class="badge blocker">Blocker</span></td>
+            <td>Session expiry is not enforced on token refresh.</td>
+            <td><code>src/auth/session.ts</code></td>
+            <td>Add expiry validation before issuing a new token.</td>
+          </tr>
+          <tr data-severity="Major" data-search="billing retry duplicate webhook idempotency">
+            <td><span class="badge major">Major</span></td>
+            <td>Billing retry can double-apply a webhook event.</td>
+            <td><code>src/billing/webhook.ts</code></td>
+            <td>Persist idempotency keys before side effects.</td>
+          </tr>
+          <tr data-severity="Minor" data-search="readme setup missing environment docs">
+            <td><span class="badge minor">Minor</span></td>
+            <td>Setup docs omit a required environment variable.</td>
+            <td><code>README.md</code></td>
+            <td>Add the variable to the quick-start block.</td>
+          </tr>
+          <tr data-severity="Major" data-search="cache invalidation stale dashboard query">
+            <td><span class="badge major">Major</span></td>
+            <td>Dashboard cache is not invalidated after a bulk import.</td>
+            <td><code>src/dashboard/cache.ts</code></td>
+            <td>Invalidate by workspace ID after import completion.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="muted">Export preview:</p>
+      <pre id="exportBox"><code>[]</code></pre>
+    </section>
+  </main>
+  <script>
+    function filterRows() {
+      const query = (document.getElementById('q').value || '').toLowerCase();
+      const severity = document.getElementById('severity').value;
+      let shown = 0;
+      document.querySelectorAll('#rows tr').forEach(row => {
+        const okQuery = !query || row.dataset.search.includes(query);
+        const okSeverity = !severity || row.dataset.severity === severity;
+        const visible = okQuery && okSeverity;
+        row.dataset.hidden = String(!visible);
+        if (visible) shown += 1;
+      });
+      document.getElementById('count').textContent = shown + ' visible';
+    }
+    function exportVisible() {
+      const findings = Array.from(document.querySelectorAll('#rows tr'))
+        .filter(row => row.dataset.hidden !== 'true')
+        .map(row => ({
+          severity: row.dataset.severity,
+          finding: row.children[1].textContent.trim(),
+          file: row.children[2].textContent.trim()
+        }));
+      document.getElementById('exportBox').textContent = JSON.stringify(findings, null, 2);
+      navigator.clipboard?.writeText(JSON.stringify(findings, null, 2));
+    }
+    filterRows();
+  </script>
+</body>
+</html>

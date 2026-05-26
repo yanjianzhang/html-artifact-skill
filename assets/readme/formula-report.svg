@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="720" viewBox="0 0 1080 720" role="img" aria-label="HTML artifact preview">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#eef4ff"/>
+      <stop offset="55%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#ecfdf3"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#101828" flood-opacity=".16"/>
+    </filter>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#bg)"/>
+  <rect x="48" y="42" width="984" height="640" rx="28" fill="#ffffff" opacity=".88" filter="url(#shadow)"/>
+<text x="78" y="102" fill="#172033" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="38" font-weight="850">Formula-Heavy Report Demo</text>
+<text x="80" y="142" fill="#667085" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="19" font-weight="520">Equations are readable math blocks, not dark code snippets.</text>
+<rect x="78" y="166" width="132" height="34" rx="17" fill="#eef4ff" stroke="#d9e0ea"/><text x="94" y="189" fill="#2457c5" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="800">aligned math</text>
+<rect x="230" y="166" width="150" height="34" rx="17" fill="#ecfdf3" stroke="#d9e0ea"/><text x="246" y="189" fill="#15803d" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="800">scroll fallback</text>
+<rect x="78" y="244" width="430" height="330" rx="20" fill="#fff" stroke="#d9e0ea"/>
+<text x="102" y="286" fill="#172033" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="22" font-weight="830">Specificity-safe F1</text>
+<rect x="102" y="314" width="382" height="210" rx="16" fill="#f8fafc" stroke="#d9e0ea"/>
+<text x="124" y="356" fill="#172033" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="700">TP</text>
+<text x="256" y="356" fill="#667085" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="700">=</text>
+<text x="284" y="356" fill="#344054" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="15" font-weight="520">|{ g in G : exists l in L, match(g,l) and specific(l,g) }|</text>
+<text x="124" y="398" fill="#172033" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="700">Precision</text>
+<text x="256" y="398" fill="#667085" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="700">=</text>
+<text x="284" y="398" fill="#344054" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="15" font-weight="520">TP / (TP + FP)</text>
+<text x="124" y="440" fill="#172033" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="700">Recall</text>
+<text x="256" y="440" fill="#667085" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="700">=</text>
+<text x="284" y="440" fill="#344054" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="15" font-weight="520">TP / |G|</text>
+<text x="124" y="482" fill="#172033" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="700">F1</text>
+<text x="256" y="482" fill="#667085" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="700">=</text>
+<text x="284" y="482" fill="#344054" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="15" font-weight="520">2 x Precision x Recall / (Precision + Recall)</text>
+<text x="102" y="552" fill="#667085" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="650">Mobile-safe horizontal scroll fallback</text>
+<rect x="562" y="244" width="430" height="330" rx="20" fill="#fff" stroke="#d9e0ea"/>
+<text x="586" y="286" fill="#172033" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="22" font-weight="830">Expansion Yield</text>
+<rect x="586" y="314" width="382" height="210" rx="16" fill="#f8fafc" stroke="#d9e0ea"/>
+<text x="608" y="356" fill="#172033" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="700">DeltaCovered</text>
+<text x="740" y="356" fill="#667085" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="700">=</text>
+<text x="768" y="356" fill="#344054" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="15" font-weight="520">|Covered(L_after) \ Covered(L_before)|</text>
+<text x="608" y="398" fill="#172033" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="700">AddedLeaves</text>
+<text x="740" y="398" fill="#667085" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="700">=</text>
+<text x="768" y="398" fill="#344054" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="15" font-weight="520">|L_after \ L_before|</text>
+<text x="608" y="440" fill="#172033" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="700">Yield</text>
+<text x="740" y="440" fill="#667085" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="700">=</text>
+<text x="768" y="440" fill="#344054" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="15" font-weight="520">(DeltaCovered / AddedLeaves) x SpecificityMean</text>
+<text x="586" y="552" fill="#667085" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="650">Mobile-safe horizontal scroll fallback</text>
+</svg>

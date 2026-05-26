@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTML Artifact Demo - Decision Report</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7fb;
+      --panel: #ffffff;
+      --ink: #172033;
+      --muted: #667085;
+      --line: #d9e0ea;
+      --blue: #2457c5;
+      --green: #15803d;
+      --orange: #b45309;
+      --soft-blue: #eef4ff;
+      --soft-green: #ecfdf3;
+      --soft-orange: #fff7ed;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top left, #eaf1ff 0, transparent 34rem), var(--bg);
+      color: var(--ink);
+      font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .shell { max-width: 1160px; margin: 0 auto; padding: 28px 20px 60px; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .topbar a { color: var(--blue); font-weight: 800; text-decoration: none; }
+    .lang { display: flex; gap: 8px; }
+    .lang button, .export button {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 999px;
+      padding: 7px 12px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 750;
+    }
+    .lang button.active { background: var(--soft-green); color: var(--green); border-color: #86efac; }
+    .hero, .panel {
+      background: rgba(255,255,255,.94);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: 0 18px 45px rgba(16,24,40,.08);
+    }
+    .hero { padding: 30px; margin-bottom: 18px; }
+    .hero h1 { margin: 0 0 8px; font-size: clamp(2rem, 4vw, 3rem); line-height: 1.05; }
+    .hero p { max-width: 860px; color: var(--muted); margin: 8px 0; }
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+    .span-4 { grid-column: span 4; }
+    .span-8 { grid-column: span 8; }
+    .span-12 { grid-column: span 12; }
+    .panel { padding: 20px; }
+    .panel h2, .panel h3 { margin-top: 0; line-height: 1.2; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .card { border: 1px solid var(--line); border-radius: 16px; padding: 16px; background: #fff; }
+    .badge { display: inline-block; border-radius: 999px; padding: 5px 10px; background: #eef2f6; color: #344054; font-size: 12px; font-weight: 800; }
+    .badge.green { background: var(--soft-green); color: var(--green); }
+    .badge.orange { background: var(--soft-orange); color: var(--orange); }
+    .badge.blue { background: var(--soft-blue); color: var(--blue); }
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    th, td { border: 1px solid var(--line); padding: 9px 10px; text-align: left; vertical-align: top; }
+    th { background: #f8fafc; }
+    .muted { color: var(--muted); }
+    .zh { display: none; }
+    body.show-zh .en { display: none; }
+    body.show-zh .zh { display: block; }
+    body.show-zh span.zh { display: inline; }
+    @media (max-width: 820px) {
+      .span-4, .span-8, .span-12 { grid-column: span 12; }
+      .cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="topbar">
+      <a href="../../README.md">HTML Artifact Skill</a>
+      <div class="lang" aria-label="Language switch">
+        <button id="enBtn" class="active" onclick="setLang('en')">English</button>
+        <button id="zhBtn" onclick="setLang('zh')">中文</button>
+      </div>
+    </div>
+    <section class="hero">
+      <h1><span class="en">Decision Report Demo</span><span class="zh">决策报告 Demo</span></h1>
+      <p class="en">A compact artifact turns scattered notes into a decision surface with evidence, trade-offs, and exportable next steps.</p>
+      <p class="zh">HTML artifact 把零散材料整理成可以比较、审阅和导出的决策界面。</p>
+      <span class="badge green">browser-native HTML</span>
+      <span class="badge blue">bilingual</span>
+      <span class="badge orange">decision-ready</span>
+    </section>
+    <section class="grid">
+      <div class="panel span-8">
+        <h2><span class="en">Executive Summary</span><span class="zh">执行摘要</span></h2>
+        <div class="cards">
+          <article class="card">
+            <h3>1. Recommendation</h3>
+            <p class="en">Ship the staged rollout after one more data-quality gate.</p>
+            <p class="zh">再通过一个数据质量 gate 后进入分阶段上线。</p>
+          </article>
+          <article class="card">
+            <h3>2. Main Risk</h3>
+            <p class="en">The current metric hides variance across small customer segments.</p>
+            <p class="zh">当前指标会掩盖小客户分组中的方差。</p>
+          </article>
+          <article class="card">
+            <h3>3. Next Action</h3>
+            <p class="en">Add a per-segment comparison and export the final gate checklist.</p>
+            <p class="zh">加入分组对比，并导出最终 gate checklist。</p>
+          </article>
+        </div>
+      </div>
+      <div class="panel span-4">
+        <h2>Export</h2>
+        <p class="muted">Copy structured output back into an agent workflow.</p>
+        <div class="export"><button onclick="copyPayload()">Copy JSON</button></div>
+      </div>
+      <div class="panel span-12">
+        <h2>Evidence Matrix</h2>
+        <table>
+          <thead><tr><th>Option</th><th>Evidence</th><th>Risk</th><th>Decision</th></tr></thead>
+          <tbody>
+            <tr><td>Baseline</td><td>Stable and explainable</td><td>Misses long-tail cases</td><td><span class="badge">fallback</span></td></tr>
+            <tr><td>Staged rollout</td><td>Best quality/cost ratio</td><td>Needs segment gate</td><td><span class="badge green">recommended</span></td></tr>
+            <tr><td>Full launch</td><td>Fastest impact</td><td>Too much unresolved variance</td><td><span class="badge orange">defer</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script>
+    function setLang(lang) {
+      document.body.classList.toggle('show-zh', lang === 'zh');
+      document.getElementById('enBtn').classList.toggle('active', lang !== 'zh');
+      document.getElementById('zhBtn').classList.toggle('active', lang === 'zh');
+    }
+    function copyPayload() {
+      const payload = { recommendation: 'staged rollout', required_gate: 'segment variance check' };
+      navigator.clipboard?.writeText(JSON.stringify(payload, null, 2));
+    }
+  </script>
+</body>
+</html>

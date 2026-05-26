@@ -10,6 +10,34 @@ Markdown 适合短文本、轻量笔记、README、简单说明。HTML 适合复
 
 HTML artifact 可以直接作为一等源文件维护。不要默认要求每个 HTML 都由 Markdown 生成；当用户编辑、发布或审阅已有 HTML artifact 时，应优先保留 HTML 本身，只把 Markdown 当作可选历史、附录或导出格式。
 
+Presentation style inspired by [trq212's X post](https://x.com/trq212/status/2052809885763747935). The previews below are checked into this repo so the README remains useful even when remote embeds fail.
+
+## What It Looks Like
+
+### Decision report
+
+[![Decision report preview](assets/readme/decision-report.svg)](examples/gallery/decision-report.html)
+
+Cards, evidence matrices, bilingual controls, and export actions turn a long answer into a decision surface.
+
+[Open demo HTML](examples/gallery/decision-report.html) · [Prompt examples](examples.md#general)
+
+### Interactive review
+
+[![Interactive review preview](assets/readme/filter-interaction.svg)](examples/gallery/interactive-review.html)
+
+Search, filters, and export controls let users inspect only the findings that matter.
+
+[Open demo HTML](examples/gallery/interactive-review.html) · [Prompt examples](examples.md#pr-review)
+
+### Formula-heavy report
+
+[![Formula report preview](assets/readme/formula-report.svg)](examples/gallery/formula-report.html)
+
+Metric definitions and equations are rendered as readable math blocks with narrow-screen fallbacks.
+
+[Open demo HTML](examples/gallery/formula-report.html) · [Prompt examples](examples.md#formula-heavy-report)
+
 ## Methodology
 
 ### HTML-first content
@@ -100,4 +128,7 @@ A strong HTML artifact usually contains:
 
 - `SKILL.md`: Cursor skill definition.
 - `examples.md`: Prompt templates for common HTML artifact tasks.
+- `examples/gallery/`: self-contained demo HTML files linked from this README.
+- `assets/readme/`: rendered preview assets used by the README gallery.
+- `scripts/render-readme-assets.py`: dependency-free generator for the README preview assets.
 
