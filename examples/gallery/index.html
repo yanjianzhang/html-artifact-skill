@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTML Artifact Gallery</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7fb;
+      --panel: #ffffff;
+      --ink: #172033;
+      --muted: #667085;
+      --line: #d9e0ea;
+      --blue: #2457c5;
+      --green: #15803d;
+      --orange: #b45309;
+      --purple: #6d28d9;
+      --soft-blue: #eef4ff;
+      --soft-green: #ecfdf3;
+      --soft-orange: #fff7ed;
+      --soft-purple: #f5f3ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top left, #eaf1ff 0, transparent 36rem), var(--bg);
+      color: var(--ink);
+      font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    .shell { max-width: 1200px; margin: 0 auto; padding: 24px 20px 64px; }
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .topbar a.home { color: var(--blue); font-weight: 800; text-decoration: none; }
+    .topbar a.home:hover { text-decoration: underline; }
+    .lang { display: flex; gap: 8px; }
+    .lang button {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 999px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 750;
+    }
+    .lang button.active { background: var(--soft-green); color: var(--green); border-color: #86efac; }
+    .hero, .panel {
+      background: rgba(255,255,255,.94);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: 0 18px 45px rgba(16,24,40,.08);
+    }
+    .hero { padding: 28px 28px 24px; margin-bottom: 18px; }
+    .hero h1 { margin: 0 0 8px; font-size: clamp(1.9rem, 3.6vw, 2.6rem); line-height: 1.1; }
+    .hero p { margin: 8px 0; color: var(--muted); max-width: 860px; }
+    .badges { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+    .badge { display: inline-block; border-radius: 999px; padding: 4px 10px; background: #eef2f6; color: #344054; font-size: 12px; font-weight: 800; }
+    .badge.green { background: var(--soft-green); color: var(--green); }
+    .badge.orange { background: var(--soft-orange); color: var(--orange); }
+    .badge.blue { background: var(--soft-blue); color: var(--blue); }
+    .badge.purple { background: var(--soft-purple); color: var(--purple); }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .card.active { border-color: #86efac; box-shadow: 0 0 0 3px rgba(134,239,172,.45); }
+    .card h3 { margin: 0; font-size: 1.1rem; }
+    .card p { margin: 0; color: var(--muted); font-size: .95rem; }
+    .card .preview {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #f8fafc;
+    }
+    .card .preview img { display: block; width: 100%; height: auto; }
+    .card .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; }
+    .card .actions button,
+    .card .actions a.btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 999px;
+      padding: 7px 12px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 750;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .card .actions button.primary {
+      background: var(--soft-green);
+      color: var(--green);
+      border-color: #86efac;
+    }
+
+    .preview-pane {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: 0 18px 45px rgba(16,24,40,.08);
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+    .preview-pane[hidden] { display: none; }
+    .preview-pane header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #f8fafc;
+    }
+    .preview-pane header .who { display: flex; align-items: center; gap: 8px; }
+    .preview-pane header .who strong { font-weight: 800; }
+    .preview-pane header .who span.muted { color: var(--muted); font-size: .9rem; }
+    .preview-pane header .actions { display: flex; gap: 8px; }
+    .preview-pane header button,
+    .preview-pane header a.btn {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 999px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 700;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .preview-pane iframe {
+      display: block;
+      width: 100%;
+      height: 70vh;
+      min-height: 480px;
+      border: 0;
+    }
+
+    .panel.methodology { padding: 22px; }
+    .panel.methodology h2 { margin: 0 0 8px; }
+    .panel.methodology ul { padding-left: 22px; margin: 6px 0 0; }
+    .panel.methodology li { margin: 4px 0; }
+    .muted { color: var(--muted); }
+
+    /* Bilingual rules */
+    .zh { display: none; }
+    body.show-zh .en { display: none; }
+    body.show-zh .zh { display: block; }
+    body.show-zh span.zh,
+    body.show-zh strong.zh { display: inline; }
+
+    @media (max-width: 920px) { .gallery-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 640px) { .gallery-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <div class="topbar">
+      <a class="home" href="../../README.md">
+        <span class="en">HTML Artifact Skill</span><span class="zh">HTML Artifact Skill</span>
+      </a>
+      <div class="lang" aria-label="Language switch">
+        <button id="enBtn" class="active" type="button" onclick="setLang('en')">English</button>
+        <button id="zhBtn" type="button" onclick="setLang('zh')">中文</button>
+      </div>
+    </div>
+
+    <section class="hero">
+      <h1>
+        <span class="en">HTML Artifact Gallery</span>
+        <span class="zh">HTML Artifact 展示库</span>
+      </h1>
+      <p class="en">This page is the home for the bundled HTML artifact demos. Click <em>Open inline</em> to preview a sub-artifact in an embedded panel, or <em>Open standalone</em> to view it in its own tab. Every sub-artifact has a <em>Back to gallery</em> link in its topbar when opened standalone.</p>
+      <p class="zh">这个页面是 HTML artifact demo 的首页。点击 <em>嵌入预览</em> 可以在下方面板里加载子页面；点击 <em>独立打开</em> 会在新标签页中查看。独立打开时，子页面顶部会显示 <em>返回 gallery</em> 链接。</p>
+      <div class="badges">
+        <span class="badge green">browser-native HTML</span>
+        <span class="badge blue">bilingual</span>
+        <span class="badge purple">hub + sub-pages</span>
+        <span class="badge orange">embed-aware</span>
+      </div>
+    </section>
+
+    <section class="preview-pane" id="previewPane" hidden aria-live="polite">
+      <header>
+        <div class="who">
+          <strong id="previewTitle">Preview</strong>
+          <span class="muted" id="previewPath"></span>
+        </div>
+        <div class="actions">
+          <a class="btn" id="previewOpen" target="_blank" rel="noopener">
+            <span class="en">Open standalone ↗</span><span class="zh">独立打开 ↗</span>
+          </a>
+          <button type="button" onclick="closePreview()">
+            <span class="en">Close inline preview</span><span class="zh">关闭嵌入预览</span>
+          </button>
+        </div>
+      </header>
+      <iframe id="previewFrame" title="Embedded HTML artifact"></iframe>
+    </section>
+
+    <section class="gallery-grid" id="cards">
+      <article class="card" data-href="decision-report.html" data-title-en="Decision report" data-title-zh="决策报告">
+        <div class="preview">
+          <img alt="Decision report preview" src="../../assets/readme/decision-report.svg">
+        </div>
+        <h3>
+          <span class="en">Decision report</span>
+          <span class="zh">决策报告</span>
+        </h3>
+        <p class="en">Cards, evidence matrix, bilingual toggle, and Copy-as-JSON. Useful for shipping a decision review.</p>
+        <p class="zh">卡片 + 证据矩阵 + 双语切换 + Copy JSON。适合输出决策评审。</p>
+        <div class="actions">
+          <button type="button" class="primary" onclick="openInline(this)">
+            <span class="en">Open inline</span><span class="zh">嵌入预览</span>
+          </button>
+          <a class="btn" href="decision-report.html" target="_blank" rel="noopener">
+            <span class="en">Open standalone ↗</span><span class="zh">独立打开 ↗</span>
+          </a>
+        </div>
+      </article>
+
+      <article class="card" data-href="interactive-review.html" data-title-en="Interactive review" data-title-zh="交互式评审">
+        <div class="preview">
+          <img alt="Interactive review preview" src="../../assets/readme/filter-interaction.svg">
+        </div>
+        <h3>
+          <span class="en">Interactive review</span>
+          <span class="zh">交互式评审</span>
+        </h3>
+        <p class="en">Search, severity filters, and copy-visible-findings export. Built for PR or audit review.</p>
+        <p class="zh">搜索 + 严重度筛选 + 导出可见行。适合 PR / 审计评审。</p>
+        <div class="actions">
+          <button type="button" class="primary" onclick="openInline(this)">
+            <span class="en">Open inline</span><span class="zh">嵌入预览</span>
+          </button>
+          <a class="btn" href="interactive-review.html" target="_blank" rel="noopener">
+            <span class="en">Open standalone ↗</span><span class="zh">独立打开 ↗</span>
+          </a>
+        </div>
+      </article>
+
+      <article class="card" data-href="formula-report.html" data-title-en="Formula-heavy report" data-title-zh="公式密集报告">
+        <div class="preview">
+          <img alt="Formula report preview" src="../../assets/readme/formula-report.svg">
+        </div>
+        <h3>
+          <span class="en">Formula-heavy report</span>
+          <span class="zh">公式密集报告</span>
+        </h3>
+        <p class="en">Aligned metric blocks with horizontal scroll fallback. Replaces dark code snippets with readable math.</p>
+        <p class="zh">aligned 指标块 + 横向滚动 fallback；用可读数学代替黑色代码片段。</p>
+        <div class="actions">
+          <button type="button" class="primary" onclick="openInline(this)">
+            <span class="en">Open inline</span><span class="zh">嵌入预览</span>
+          </button>
+          <a class="btn" href="formula-report.html" target="_blank" rel="noopener">
+            <span class="en">Open standalone ↗</span><span class="zh">独立打开 ↗</span>
+          </a>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel methodology">
+      <h2>
+        <span class="en">Hub + sub-pages pattern</span>
+        <span class="zh">首页 + 子页面 模式</span>
+      </h2>
+      <p class="en">When an HTML artifact grows past one page, give it a hub:</p>
+      <p class="zh">当一个 HTML artifact 超过单页时，提供一个首页：</p>
+      <ul class="en">
+        <li>The hub indexes all sub-pages with previews, short descriptions, and direct links.</li>
+        <li>Each card offers both <em>Open inline</em> (iframe preview without leaving the hub) and <em>Open standalone</em> (new tab) so reviewers can stay in context or copy a link.</li>
+        <li>Every sub-page renders a <em>Back to gallery</em> (or <em>Back to home</em>) link in its topbar, and hides it automatically when embedded in an iframe so the parent UI is not duplicated.</li>
+        <li>Both the hub and each sub-page keep the same language switch, the same fonts, and the same export controls so navigating between them feels continuous.</li>
+      </ul>
+      <ul class="zh">
+        <li>首页（hub）索引所有子页面，并提供预览图、简要说明和直达链接。</li>
+        <li>每张卡片同时提供 <em>嵌入预览</em>（在首页内 iframe 加载）和 <em>独立打开</em>（新标签页），让评审者既可以保持上下文，也可以拷贝独立链接。</li>
+        <li>每个子页面顶部都有 <em>返回 gallery</em>（或 <em>返回首页</em>）链接；当被 iframe 嵌入时自动隐藏，避免与父页 UI 重复。</li>
+        <li>首页和子页面共享相同的语言切换、字体和导出控件，让在它们之间跳转感觉连续。</li>
+      </ul>
+    </section>
+  </main>
+
+  <script>
+    const previewPane = document.getElementById('previewPane');
+    const previewFrame = document.getElementById('previewFrame');
+    const previewTitle = document.getElementById('previewTitle');
+    const previewPath = document.getElementById('previewPath');
+    const previewOpen = document.getElementById('previewOpen');
+
+    function setLang(lang) {
+      document.body.classList.toggle('show-zh', lang === 'zh');
+      document.getElementById('enBtn').classList.toggle('active', lang !== 'zh');
+      document.getElementById('zhBtn').classList.toggle('active', lang === 'zh');
+      try { localStorage.setItem('html-artifact-gallery-lang', lang); } catch (_) {}
+      const event = new CustomEvent('gallery:lang', { detail: { lang } });
+      try {
+        const frameWin = previewFrame.contentWindow;
+        if (frameWin && frameWin.location.origin === location.origin) {
+          frameWin.postMessage({ type: 'gallery:lang', lang }, '*');
+        }
+      } catch (_) {}
+    }
+
+    function openInline(button) {
+      const card = button.closest('.card');
+      document.querySelectorAll('.card.active').forEach(el => el.classList.remove('active'));
+      card.classList.add('active');
+      const href = card.dataset.href;
+      const titleEn = card.dataset.titleEn || href;
+      const titleZh = card.dataset.titleZh || titleEn;
+      previewTitle.innerHTML = '<span class="en">' + titleEn + '</span><span class="zh">' + titleZh + '</span>';
+      previewPath.textContent = href;
+      previewOpen.href = href;
+      previewFrame.src = href;
+      previewPane.hidden = false;
+      previewPane.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function closePreview() {
+      previewPane.hidden = true;
+      previewFrame.src = 'about:blank';
+      document.querySelectorAll('.card.active').forEach(el => el.classList.remove('active'));
+    }
+
+    try {
+      const saved = localStorage.getItem('html-artifact-gallery-lang');
+      if (saved === 'zh') setLang('zh');
+    } catch (_) {}
+  </script>
+</body>
+</html>

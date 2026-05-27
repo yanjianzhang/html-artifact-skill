@@ -89,6 +89,24 @@ Markdown 适合轻量记录；HTML artifact 适合决策、审阅、比较和协
 - 历史 backfill 翻译用慢轮询，不阻塞用户点击语言切换。
 - 如果需要 ngrok 等公网预览，用 supervisor 或 hook 同时守护 docs server 和 tunnel，并记录当前 public URL。
 
+## 首页 + 子页面 导航
+
+当一个 HTML artifact 超过单页（gallery、多文档报告集合、小型 docs site、多 tab 编辑器）时，必须配套提供一个首页（hub），并保证首页 ↔ 子页面之间的双向导航。
+
+规则：
+
+- 首页是 canonical 入口。它应该列出所有子 artifact，并提供简短说明、预览图（图片、SVG 或实时缩略图）和直达链接。
+- 每张子 artifact 卡片至少提供两种打开方式：
+  - `嵌入预览`（Open inline）通过 `<iframe>` 把子页面嵌入到首页里，保留首页上下文。
+  - `独立打开`（Open standalone）在新标签页打开子页面，便于复制链接或同时对比两个页面。
+- 每个子页面顶部必须有 `← 返回 gallery` 或 `← 返回首页` 链接，跳回首页本身，而不是仓库 README。
+- 子页面应检测自己是否被 iframe 嵌入（`window.top !== window.self`）。被嵌入时隐藏 back-to-hub 链接，避免与父页 UI 重复。语言切换等子页面自有 UI 可以保留，只屏蔽指向首页的导航行。
+- 首页 iframe 嵌入子页面时，使用 `postMessage` 同步跨 frame 状态。至少要把当前语言从首页广播到子页面，避免被嵌入的子 artifact 显示错误的 locale。
+- 首页和子页面共用相同的语言切换、字体、最大内容宽度和导出按钮样式。首页是共享 chrome 的事实源，子页面不能再写一套竞争的 topbar。
+- 双语 artifact 中，首页必须本地化卡片标题、描述和 back-to-hub 链接文案。两种语言要在每个页面中都出现，而不是只在首页。
+- 对于 durable docs site，首页可以等同于 docs server 的 `index.html`。子页面顶部 `← 返回首页` 链接在每个语言路由（例如默认语言的 `/index.html` 和英文的 `/en/index.html`）下都要解析正确。
+- 不要只依赖浏览器历史完成返回操作。深链接进入子页面的用户也必须能在页面里直接看到 back-to-hub 链接，而不需要按浏览器后退键。
+
 ## 常见结构
 
 每个 HTML artifact 通常应包含：
@@ -118,4 +136,5 @@ Markdown 适合轻量记录；HTML artifact 适合决策、审阅、比较和协
 - 源材料是否渲染为有用 HTML，而不是 raw Markdown？
 - 公式是否作为数学内容渲染，并在窄屏可读？
 - docs site 是否保护完整 HTML，不被坏缓存或 partial injection 覆盖？
+- 如果 artifact 超过一页，是否有首页索引并预览所有子页面，且每个子页面都暴露 back-to-hub 链接、在 iframe 嵌入时自动隐藏？
 - 如果要求远程预览，server/tunnel 是否有 supervisor？

@@ -113,6 +113,24 @@ Requirements:
 - Configure a watchdog / supervisor so the docs server and ngrok tunnel restart automatically if they stop, and write the public URL to a log.
 ```
 
+## Hub Page With Sub-Artifacts
+
+```text
+Create a bilingual HTML hub page that indexes the following sub-artifacts:
+- {sub-artifact 1 (path or title)}
+- {sub-artifact 2 (path or title)}
+- {sub-artifact 3 (path or title)}
+Requirements:
+- The hub lists every sub-artifact as a card with a short description and a preview (image or inline SVG).
+- Each card exposes two actions: "Open inline" (loads the sub-artifact in an iframe panel embedded in the hub) and "Open standalone" (opens in a new tab).
+- Every sub-artifact must have a "Back to hub" link in its topbar, with text that matches the active language.
+- Each sub-artifact must detect iframe embedding (`window.top !== window.self`) and hide its back-to-hub link when embedded, so the parent UI is not duplicated.
+- The hub forwards language changes to embedded sub-artifacts via `postMessage` so the locale stays consistent.
+- Hub and sub-artifacts share the same language switch, fonts, and export styles; do not invent a competing topbar in any sub-page.
+- Provide English and Chinese reading paths on the hub and every sub-artifact.
+- A deep-linked sub-artifact must still show the back-to-hub link without depending on the browser back button.
+```
+
 ## Formula-Heavy Report
 
 ```text

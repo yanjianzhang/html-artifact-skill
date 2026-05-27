@@ -113,6 +113,24 @@
 - 配置 watchdog / supervisor，让 docs server 和 ngrok tunnel 断掉后自动重启，并把 public URL 写到日志。
 ```
 
+## Hub Page With Sub-Artifacts
+
+```text
+请生成一个双语 HTML 首页，用来索引下面这些子 artifact：
+- {子 artifact 1（路径或标题）}
+- {子 artifact 2（路径或标题）}
+- {子 artifact 3（路径或标题）}
+要求：
+- 首页用卡片列出每一个子 artifact，包含简短说明和预览图（图片或 inline SVG）。
+- 每张卡片提供两种操作：「嵌入预览」（在首页的 iframe 面板里加载子 artifact）和「独立打开」（在新标签页打开）。
+- 每个子 artifact 顶部必须有「返回首页」链接，文案随当前语言切换。
+- 子 artifact 必须检测 iframe 嵌入（`window.top !== window.self`），被嵌入时隐藏 back-to-hub 链接，避免和父页 UI 重复。
+- 首页通过 `postMessage` 把语言切换转发给被嵌入的子 artifact，保持 locale 一致。
+- 首页和子 artifact 共用相同的语言切换、字体和导出按钮样式，子页面不要再写一套竞争的 topbar。
+- 首页和每个子 artifact 都提供中文和 English 阅读路径。
+- 深链接进入子 artifact 时，仍然必须显示 back-to-hub 链接，而不是依赖浏览器后退键。
+```
+
 ## Formula-Heavy Report
 
 ```text

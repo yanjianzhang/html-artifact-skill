@@ -170,6 +170,22 @@ Rules:
 - For backfill translation, run slow polling separately from request-time behavior so language-switch clicks do not block page load.
 - For public preview tunnels such as ngrok, use a supervisor or hook that keeps both the docs server and tunnel process alive and records the current public URL.
 
+### Hub Index And Back Navigation
+When an HTML artifact has more than one page (a gallery, a multi-doc report set, a small docs site, a multi-tab editor), give it a hub page and make navigation between hub and sub-pages reversible.
+
+Rules:
+- The hub page is the canonical entry point. It must list every sub-artifact with a short description, a preview (image, SVG, or live thumbnail), and a direct link.
+- Each sub-artifact card should expose two ways to open it:
+  - `Open inline` loads the sub-page in an `<iframe>` embedded in the hub so the reviewer never loses the hub context.
+  - `Open standalone` opens the sub-page in a new tab so the reviewer can copy a link or compare two pages side-by-side.
+- Every sub-page must include a back-to-hub link in its topbar (for example `← Back to gallery` or `← Back to home`). The link target is the hub page, not the repository README.
+- Sub-pages must detect iframe embedding (`window.top !== window.self`) and hide the back-to-hub link when embedded, so the parent hub UI is not duplicated. Other UI such as language switches inside the sub-page can stay; just suppress the navigation row that points back at the hub.
+- When the hub embeds a sub-page in an iframe, propagate cross-frame state with `postMessage`. At minimum, the hub should forward the current language so the embedded sub-artifact does not show the wrong locale.
+- The hub and every sub-page share the same language switch, fonts, max content width, and export-button style. Treat the hub as the source of truth for shared chrome; sub-pages must not invent their own competing topbar.
+- For bilingual artifacts, the hub must localize the card titles, descriptions, and the back-to-hub link text. Both languages must be present in every page, not only on the hub.
+- For durable docs sites, the hub may also be the docs server `index.html`. Sub-pages keep a `← Back to home` link in the topbar that resolves correctly under every language route (for example `/index.html` for the default language and `/en/index.html` for English).
+- Do not rely on browser history alone for back navigation. A reviewer arriving at a deep-linked sub-page must still see a visible back-to-hub link without pressing the browser back button.
+
 ### Manual HTML Ownership Marker
 Declare manual ownership with an explicit marker comment near the top of the document, for example `<!-- paperbench-html-source: manual -->`. The build system must:
 - Detect the marker by reading the file head, not by filename or directory.
@@ -415,6 +431,7 @@ Before finishing, verify:
 - Is source material rendered as useful HTML rather than left as raw Markdown?
 - Are formulas rendered as math and still readable on narrow screens?
 - If this is a docs site, are complete HTML documents protected from malformed translation caches or partial injection?
+- If the artifact has more than one page, is there a hub index that previews every sub-page, and does every sub-page expose a back-to-hub link that hides itself when embedded?
 - If the page is manually owned, does it carry the manual ownership marker in **every** language route it claims to own, and does a fresh rebuild leave both files byte-stable?
 - If remote preview was requested, is the server/tunnel supervised rather than manually started once?
 

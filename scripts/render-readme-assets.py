@@ -172,12 +172,63 @@ def formula_report() -> str:
     return svg(1080, 720, body)
 
 
+def gallery_hub() -> str:
+    """Preview of the gallery hub: hub header + 3 sub-page cards + inline preview pane."""
+    cards = []
+    sub_cards = [
+        ("Decision report", "Cards + evidence + JSON export", "decision-report.html", "#15803d", "#ecfdf3"),
+        ("Interactive review", "Search, severity, copy-visible", "interactive-review.html", "#2457c5", "#eef4ff"),
+        ("Formula-heavy report", "Aligned math, scroll fallback", "formula-report.html", "#b45309", "#fff7ed"),
+    ]
+    for idx, (title, blurb, href, accent, soft) in enumerate(sub_cards):
+        x = 78 + idx * 318
+        cards.append(
+            "\n".join(
+                [
+                    f'<rect x="{x}" y="216" width="296" height="178" rx="18" fill="#fff" stroke="#d9e0ea"/>',
+                    f'<rect x="{x}" y="216" width="6" height="178" rx="3" fill="{accent}"/>',
+                    f'<rect x="{x + 22}" y="238" width="252" height="60" rx="12" fill="{soft}" stroke="#d9e0ea"/>',
+                    text(x + 36, y := 274, title, size=14, weight=800, color=accent),
+                    text(x + 22, 322, title, size=18, weight=820),
+                    text(x + 22, 346, blurb, size=14, weight=540, color="#475467"),
+                    pill(x + 22, 360, "Open inline", "#ecfdf3", "#15803d", 116),
+                    pill(x + 152, 360, "Standalone ↗", "#fff", "#2457c5", 124),
+                ]
+            )
+        )
+    preview_pane = [
+        '<rect x="48" y="430" width="984" height="232" rx="22" fill="#ffffff" stroke="#d9e0ea"/>',
+        '<rect x="48" y="430" width="984" height="46" rx="22" fill="#f8fafc" stroke="#d9e0ea"/>',
+        text(78, 460, "Preview · decision-report.html", size=16, weight=800),
+        pill(820, 442, "Standalone ↗", "#fff", "#2457c5", 124),
+        pill(948, 442, "Close", "#fff", "#172033", 76),
+        '<rect x="80" y="496" width="920" height="146" rx="14" fill="#f8fafc" stroke="#d9e0ea"/>',
+        text(110, 528, "Embedded sub-artifact loads in an iframe.", size=15, weight=560, color="#475467"),
+        text(110, 552, "Back-to-gallery link is auto-hidden when embedded.", size=15, weight=560, color="#475467"),
+        text(110, 596, "Same language switch and fonts as the hub.", size=15, weight=560, color="#475467"),
+    ]
+    body = "\n".join(
+        [
+            '<rect x="48" y="42" width="984" height="640" rx="28" fill="#ffffff" opacity=".88" filter="url(#shadow)"/>',
+            text(78, 102, "HTML Artifact Gallery", size=38, weight=850),
+            text(80, 142, "Hub page indexes sub-artifacts; sub-pages link back home.", size=19, weight=520, color="#667085"),
+            pill(78, 166, "hub + sub-pages", "#f5f3ff", "#6d28d9", 152),
+            pill(240, 166, "embed-aware", "#eef4ff", "#2457c5", 138),
+            pill(388, 166, "bilingual", "#ecfdf3", "#15803d"),
+            "\n".join(cards),
+            "\n".join(preview_pane),
+        ]
+    )
+    return svg(1080, 720, body)
+
+
 def main() -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     assets = {
         "decision-report.svg": decision_report(),
         "filter-interaction.svg": interactive_review(),
         "formula-report.svg": formula_report(),
+        "gallery-hub.svg": gallery_hub(),
     }
     for filename, content in assets.items():
         (OUT_DIR / filename).write_text(content, encoding="utf-8")

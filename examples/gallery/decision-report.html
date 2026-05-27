@@ -28,7 +28,9 @@
     }
     .shell { max-width: 1160px; margin: 0 auto; padding: 28px 20px 60px; }
     .topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
+    body.embedded .topbar { display: none; }
     .topbar a { color: var(--blue); font-weight: 800; text-decoration: none; }
+    .topbar a:hover { text-decoration: underline; }
     .lang { display: flex; gap: 8px; }
     .lang button, .export button {
       border: 1px solid var(--line);
@@ -78,7 +80,7 @@
 <body>
   <main class="shell">
     <div class="topbar">
-      <a href="../../README.md">HTML Artifact Skill</a>
+      <a href="index.html"><span class="en">← Back to gallery</span><span class="zh">← 返回 gallery</span></a>
       <div class="lang" aria-label="Language switch">
         <button id="enBtn" class="active" onclick="setLang('en')">English</button>
         <button id="zhBtn" onclick="setLang('zh')">中文</button>
@@ -132,6 +134,10 @@
     </section>
   </main>
   <script>
+    if (window.top !== window.self) document.body.classList.add('embedded');
+    window.addEventListener('message', (event) => {
+      if (event && event.data && event.data.type === 'gallery:lang') setLang(event.data.lang);
+    });
     function setLang(lang) {
       document.body.classList.toggle('show-zh', lang === 'zh');
       document.getElementById('enBtn').classList.toggle('active', lang !== 'zh');

@@ -16,6 +16,14 @@ HTML artifact 可以直接作为一等源文件维护。不要默认要求每个
 
 ## 界面效果
 
+### 首页（Gallery Hub）
+
+[![Gallery hub preview](assets/readme/gallery-hub.svg)](examples/gallery/index.html)
+
+首页索引所有子 artifact，支持在嵌入式 iframe 面板中预览，并把当前语言转发给子页面。每个子 artifact 顶部都提供返回首页的链接，并在被首页 iframe 嵌入时自动隐藏，避免与父页 UI 重复。
+
+[打开 hub HTML](examples/gallery/index.html) · [中文 Prompt 示例](examples.zh-CN.md#hub-page-with-sub-artifacts)
+
 ### 决策报告
 
 [![Decision report preview](assets/readme/decision-report.svg)](examples/gallery/decision-report.html)
@@ -69,6 +77,16 @@ HTML artifact 可以直接作为一等源文件维护。不要默认要求每个
 - 多行指标定义使用 aligned display，便于对齐等号和逐行阅读。
 - 已存在的 `<div class="formula">...</div>` 纯文本公式块可以保留 source text，同时在浏览器中升级为 MathJax 或等价渲染。
 - 公式区域需要横向滚动 fallback，避免移动端或窄屏把页面撑坏。
+
+### 首页 + 子页面
+
+当 HTML artifact 超过单页时，必须提供首页，并保证首页 ↔ 子页面之间的双向导航：
+
+- 首页是 canonical 入口，用卡片列出每个子 artifact，包含简短说明、预览图和直达链接。
+- 每张卡片提供两种打开方式：`嵌入预览`（在首页 iframe 面板里加载子页面，保留首页上下文）和 `独立打开`（在新标签页打开，便于复制链接或并排对比）。
+- 每个子页面顶部都有 `← 返回首页` 链接。子页面通过 `window.top !== window.self` 检测是否被 iframe 嵌入；被嵌入时自动隐藏该链接，避免与父页 UI 重复。
+- 首页通过 `postMessage` 把语言切换转发给被嵌入的子 artifact，保持跨 frame 的 locale 一致。
+- 对于 docs site，首页可以等于 docs server 的 `index.html`。返回首页的链接必须在每个语言路由下都解析正确，例如 `/index.html` 和 `/en/index.html`。
 
 ### Durable docs sites
 
@@ -132,6 +150,7 @@ Cursor 会发现 `SKILL.md` 作为 skill 定义。
 - `SKILL.zh-CN.md`: 中文 skill reference。
 - `examples.md`: 英文 prompt templates。
 - `examples.zh-CN.md`: 中文 prompt templates。
-- `examples/gallery/`: README 链接的自包含 demo HTML。
+- `examples/gallery/index.html`: 双语首页（hub），可嵌入预览每个 demo，也可以独立打开。
+- `examples/gallery/`: README 链接的自包含 demo HTML，每个文件都带返回首页的链接，并在被首页 iframe 嵌入时自动隐藏该链接。
 - `assets/readme/`: README gallery 使用的预览资产。
 - `scripts/render-readme-assets.py`: 无依赖 README 预览资产生成器。

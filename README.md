@@ -16,6 +16,14 @@ Presentation style inspired by [trq212's X post](https://x.com/trq212/status/205
 
 ## What It Looks Like
 
+### Gallery hub
+
+[![Gallery hub preview](assets/readme/gallery-hub.svg)](examples/gallery/index.html)
+
+A hub page indexes every sub-artifact, supports inline preview in an embedded iframe panel, and propagates the active language to embedded children. Every sub-artifact links back to the hub from its topbar and auto-hides that link when it is being rendered inside the hub's iframe.
+
+[Open hub HTML](examples/gallery/index.html) · [Prompt examples](examples.md#hub-page-with-sub-artifacts)
+
 ### Decision report
 
 [![Decision report preview](assets/readme/decision-report.svg)](examples/gallery/decision-report.html)
@@ -69,6 +77,16 @@ When a page includes metrics, scoring rules, probability, sets, or algorithm def
 - Use aligned display blocks for multi-line metric definitions so equal signs scan vertically.
 - Existing plain formula blocks such as `<div class="formula">...</div>` may preserve source text while upgrading the browser view with MathJax or equivalent rendering.
 - Formula regions need horizontal-scroll fallbacks so narrow screens do not break the page.
+
+### Hub + sub-pages
+
+When an HTML artifact has more than one page, give it a hub and make navigation reversible:
+
+- The hub is the canonical entry point. It lists every sub-artifact as a card with a short description, a preview, and direct links.
+- Each card offers both `Open inline` (loads the sub-artifact in an embedded iframe so the reviewer never loses hub context) and `Open standalone` (opens in a new tab for link-sharing or side-by-side review).
+- Each sub-page has a `← Back to hub` link in its topbar. Sub-pages detect iframe embedding (`window.top !== window.self`) and hide that link when embedded so the parent UI is not duplicated.
+- The hub forwards language changes to embedded sub-artifacts via `postMessage` so the locale stays consistent across frames.
+- For docs sites, the hub may be the docs server `index.html`. The back-to-hub link must resolve correctly under every language route, for example `/index.html` and `/en/index.html`.
 
 ### Durable docs sites
 
@@ -132,7 +150,8 @@ A strong HTML artifact usually contains:
 - `SKILL.zh-CN.md`: Chinese skill reference.
 - `examples.md`: English prompt templates for common HTML artifact tasks.
 - `examples.zh-CN.md`: Chinese prompt templates for common HTML artifact tasks.
-- `examples/gallery/`: self-contained demo HTML files linked from this README.
+- `examples/gallery/index.html`: bilingual hub page that previews every demo inline or opens it standalone.
+- `examples/gallery/`: self-contained demo HTML files linked from this README. Each one carries a back-to-hub link that auto-hides when embedded in the hub iframe.
 - `assets/readme/`: rendered preview assets used by the README gallery.
 - `scripts/render-readme-assets.py`: dependency-free generator for the README preview assets.
 

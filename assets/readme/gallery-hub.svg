@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="720" viewBox="0 0 1080 720" role="img" aria-label="HTML artifact preview">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#eef4ff"/>
+      <stop offset="55%" stop-color="#f8fafc"/>
+      <stop offset="100%" stop-color="#ecfdf3"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#101828" flood-opacity=".16"/>
+    </filter>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#bg)"/>
+  <rect x="48" y="42" width="984" height="640" rx="28" fill="#ffffff" opacity=".88" filter="url(#shadow)"/>
+<text x="78" y="102" fill="#172033" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="38" font-weight="850">HTML Artifact Gallery</text>
+<text x="80" y="142" fill="#667085" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="19" font-weight="520">Hub page indexes sub-artifacts; sub-pages link back home.</text>
+<rect x="78" y="166" width="152" height="34" rx="17" fill="#f5f3ff" stroke="#d9e0ea"/><text x="94" y="189" fill="#6d28d9" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="800">hub + sub-pages</text>
+<rect x="240" y="166" width="138" height="34" rx="17" fill="#eef4ff" stroke="#d9e0ea"/><text x="256" y="189" fill="#2457c5" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="800">embed-aware</text>
+<rect x="388" y="166" width="109" height="34" rx="17" fill="#ecfdf3" stroke="#d9e0ea"/><text x="404" y="189" fill="#15803d" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="800">bilingual</text>
+<rect x="78" y="216" width="296" height="178" rx="18" fill="#fff" stroke="#d9e0ea"/>
+<rect x="78" y="216" width="6" height="178" rx="3" fill="#15803d"/>
+<rect x="100" y="238" width="252" height="60" rx="12" fill="#ecfdf3" stroke="#d9e0ea"/>
+<text x="114" y="274" fill="#15803d" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="800">Decision report</text>
+<text x="100" y="322" fill="#172033" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="820">Decision report</text>
+<text x="100" y="346" fill="#475467" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="540">Cards + evidence + JSON export</text>
+<rect x="100" y="360" width="116" height="34" rx="17" fill="#ecfdf3" stroke="#d9e0ea"/><text x="116" y="383" fill="#15803d" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="800">Open inline</text>
+<rect x="230" y="360" width="124" height="34" rx="17" fill="#fff" stroke="#d9e0ea"/><text x="246" y="383" fill="#2457c5" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="800">Standalone ↗</text>
+<rect x="396" y="216" width="296" height="178" rx="18" fill="#fff" stroke="#d9e0ea"/>
+<rect x="396" y="216" width="6" height="178" rx="3" fill="#2457c5"/>
+<rect x="418" y="238" width="252" height="60" rx="12" fill="#eef4ff" stroke="#d9e0ea"/>
+<text x="432" y="274" fill="#2457c5" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="800">Interactive review</text>
+<text x="418" y="322" fill="#172033" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="820">Interactive review</text>
+<text x="418" y="346" fill="#475467" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="540">Search, severity, copy-visible</text>
+<rect x="418" y="360" width="116" height="34" rx="17" fill="#ecfdf3" stroke="#d9e0ea"/><text x="434" y="383" fill="#15803d" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="800">Open inline</text>
+<rect x="548" y="360" width="124" height="34" rx="17" fill="#fff" stroke="#d9e0ea"/><text x="564" y="383" fill="#2457c5" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="800">Standalone ↗</text>
+<rect x="714" y="216" width="296" height="178" rx="18" fill="#fff" stroke="#d9e0ea"/>
+<rect x="714" y="216" width="6" height="178" rx="3" fill="#b45309"/>
+<rect x="736" y="238" width="252" height="60" rx="12" fill="#fff7ed" stroke="#d9e0ea"/>
+<text x="750" y="274" fill="#b45309" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="800">Formula-heavy report</text>
+<text x="736" y="322" fill="#172033" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="18" font-weight="820">Formula-heavy report</text>
+<text x="736" y="346" fill="#475467" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="540">Aligned math, scroll fallback</text>
+<rect x="736" y="360" width="116" height="34" rx="17" fill="#ecfdf3" stroke="#d9e0ea"/><text x="752" y="383" fill="#15803d" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="800">Open inline</text>
+<rect x="866" y="360" width="124" height="34" rx="17" fill="#fff" stroke="#d9e0ea"/><text x="882" y="383" fill="#2457c5" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="800">Standalone ↗</text>
+<rect x="48" y="430" width="984" height="232" rx="22" fill="#ffffff" stroke="#d9e0ea"/>
+<rect x="48" y="430" width="984" height="46" rx="22" fill="#f8fafc" stroke="#d9e0ea"/>
+<text x="78" y="460" fill="#172033" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="16" font-weight="800">Preview · decision-report.html</text>
+<rect x="820" y="442" width="124" height="34" rx="17" fill="#fff" stroke="#d9e0ea"/><text x="836" y="465" fill="#2457c5" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="800">Standalone ↗</text>
+<rect x="948" y="442" width="76" height="34" rx="17" fill="#fff" stroke="#d9e0ea"/><text x="964" y="465" fill="#172033" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="14" font-weight="800">Close</text>
+<rect x="80" y="496" width="920" height="146" rx="14" fill="#f8fafc" stroke="#d9e0ea"/>
+<text x="110" y="528" fill="#475467" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="15" font-weight="560">Embedded sub-artifact loads in an iframe.</text>
+<text x="110" y="552" fill="#475467" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="15" font-weight="560">Back-to-gallery link is auto-hidden when embedded.</text>
+<text x="110" y="596" fill="#475467" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" font-size="15" font-weight="560">Same language switch and fonts as the hub.</text>
+</svg>
