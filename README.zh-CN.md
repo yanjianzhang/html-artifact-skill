@@ -88,6 +88,17 @@ HTML artifact 可以直接作为一等源文件维护。不要默认要求每个
 - 首页通过 `postMessage` 把语言切换转发给被嵌入的子 artifact，保持跨 frame 的 locale 一致。
 - 对于 docs site，首页可以等于 docs server 的 `index.html`。返回首页的链接必须在每个语言路由下都解析正确，例如 `/index.html` 和 `/en/index.html`。
 
+### 项目级 artifact 主页
+
+当一个仓库积累多个 standalone HTML 报告时，应增加项目级 artifact 主页：
+
+- 通过扫描真实存在的 `*.html` 自动生成 `artifacts/index.html`，不要手动维护链接。
+- 排除跳转页和主页自身。
+- 子页面按创建时间倒序排列，并在每张卡片上显示创建时间。
+- 如果 HTTP server 从仓库根目录启动，在根目录加 `index.html` 跳转到 `artifacts/index.html`。
+- 每个子页面都加可见的 `Project Home` / `返回项目主页` 按钮，并根据页面位置使用正确相对链接。
+- 当公开 URL 同时包含根目录报告和 `artifacts/` 页面时，server 应从仓库根目录启动。
+
 ### Durable docs sites
 
 当 HTML artifact 发展成多页面文档站时，服务、翻译和缓存也属于 artifact 质量的一部分：

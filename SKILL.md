@@ -186,6 +186,19 @@ Rules:
 - For durable docs sites, the hub may also be the docs server `index.html`. Sub-pages keep a `← Back to home` link in the topbar that resolves correctly under every language route (for example `/index.html` for the default language and `/en/index.html` for English).
 - Do not rely on browser history alone for back navigation. A reviewer arriving at a deep-linked sub-page must still see a visible back-to-hub link without pressing the browser back button.
 
+### Project-Level Artifact Homepages
+When a project accumulates multiple standalone HTML reports over time, create a project artifact homepage rather than leaving users to guess URLs.
+
+Rules:
+- Put the project homepage at a stable served path, usually `artifacts/index.html`, and add a root-level `index.html` redirect to it when the HTTP server is rooted at the repository root.
+- Generate the homepage from the repository's actual `*.html` files instead of hand-maintaining links. Exclude redirect-only pages such as the root `index.html` and exclude the homepage itself.
+- Sort child pages by creation time descending so the newest artifact appears first. Use the same timestamp for sorting and display. On macOS, `st_birthtime` is appropriate; elsewhere fall back to `st_ctime`.
+- Show the creation time on each child-page card or button, next to the artifact path or title, for example `Created 2026-05-28 13:21`.
+- Group pages by location or role when useful, for example `Research Artifacts` for files under `artifacts/` and `Project Root Reports` for root-level reports.
+- Every child page must expose a visible `Project Home` / `返回项目主页` button. Use relative links that match the page location: `./index.html` for pages inside `artifacts/`, and `./artifacts/index.html` for root-level reports.
+- If the project is served through `python -m http.server` or ngrok, serve from the repository root when links include both root-level reports and `artifacts/` pages. Serving only `artifacts/` will make root-level reports such as `/btbd-d1024-results.html` return 404.
+- Keep the index generator in the project or skill repo, document the command, and rerun it after adding or moving HTML artifacts.
+
 ### Manual HTML Ownership Marker
 Declare manual ownership with an explicit marker comment near the top of the document, for example `<!-- paperbench-html-source: manual -->`. The build system must:
 - Detect the marker by reading the file head, not by filename or directory.

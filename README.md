@@ -88,6 +88,17 @@ When an HTML artifact has more than one page, give it a hub and make navigation 
 - The hub forwards language changes to embedded sub-artifacts via `postMessage` so the locale stays consistent across frames.
 - For docs sites, the hub may be the docs server `index.html`. The back-to-hub link must resolve correctly under every language route, for example `/index.html` and `/en/index.html`.
 
+### Project artifact homepage
+
+When a repository accumulates multiple standalone HTML reports, add a project-level artifact homepage:
+
+- Generate `artifacts/index.html` by scanning actual `*.html` files rather than hand-maintaining links.
+- Exclude redirect-only pages and the homepage itself.
+- Sort child pages by creation time descending and show that creation time on each card.
+- Add a root `index.html` redirect to `artifacts/index.html` when the HTTP server is rooted at the repository root.
+- Add a visible `Project Home` button to every child page, with relative links that match the page location.
+- Serve from the repository root when public URLs need to include both root-level reports and `artifacts/` pages.
+
 ### Durable docs sites
 
 When HTML artifacts become a multi-page documentation site, serving, translation, and cache hygiene are part of artifact quality:

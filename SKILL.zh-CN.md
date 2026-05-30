@@ -107,6 +107,21 @@ Markdown 适合轻量记录；HTML artifact 适合决策、审阅、比较和协
 - 对于 durable docs site，首页可以等同于 docs server 的 `index.html`。子页面顶部 `← 返回首页` 链接在每个语言路由（例如默认语言的 `/index.html` 和英文的 `/en/index.html`）下都要解析正确。
 - 不要只依赖浏览器历史完成返回操作。深链接进入子页面的用户也必须能在页面里直接看到 back-to-hub 链接，而不需要按浏览器后退键。
 
+## 项目级 Artifact 主页
+
+当一个项目长期积累多个 standalone HTML 报告时，应该制作项目级 artifact 主页，而不是让用户猜 URL。
+
+规则：
+
+- 主页放在稳定 served path，通常是 `artifacts/index.html`；如果 HTTP server 从仓库根目录启动，应在根目录加一个 `index.html` 跳转到 `artifacts/index.html`。
+- 主页应由脚本扫描仓库真实存在的 `*.html` 自动生成，不要手动维护链接。排除跳转页（如根目录 `index.html`）和主页自身。
+- 子页面按创建时间倒序排列，最新 artifact 在最前。排序和展示必须使用同一个时间源；macOS 可用 `st_birthtime`，其他系统 fallback 到 `st_ctime`。
+- 每个子页面卡片或按钮上显示创建时间，例如 `Created 2026-05-28 13:21`，并和 artifact path 或标题放在一起。
+- 必要时按位置或角色分组，例如 `Research Artifacts`（`artifacts/` 下文件）和 `Project Root Reports`（根目录报告）。
+- 每个子页面必须有可见的 `Project Home` / `返回项目主页` 按钮。链接必须匹配页面位置：`artifacts/` 内页面使用 `./index.html`；根目录报告使用 `./artifacts/index.html`。
+- 如果通过 `python -m http.server` 或 ngrok 对外预览，并且链接同时包含根目录报告和 `artifacts/` 页面，应从仓库根目录启动 server。只从 `artifacts/` 启动会导致 `/btbd-d1024-results.html` 这类根目录报告 404。
+- 将主页生成脚本放在项目或 skill repo 中，记录运行命令；新增或移动 HTML artifact 后重新运行。
+
 ## 常见结构
 
 每个 HTML artifact 通常应包含：
